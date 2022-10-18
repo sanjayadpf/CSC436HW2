@@ -15,7 +15,9 @@ export default function CreateTodo({ user, dispatch }) {
           title,
           description,
           author: user,
-          dateCreated: (formatDate(new Date(Date.now()))),
+          dateCreated: formatDate(new Date(Date.now())),
+          checked: false,
+          completed: "",
           id: uuidv4()
         });
       }}

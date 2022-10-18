@@ -1,5 +1,5 @@
 import { formatDate } from "./todo/Format.js";
-import {useReducer } from "react";
+import { useReducer } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import UserBar from "./user/UserBar";
@@ -7,6 +7,7 @@ import TodoList from "./todo/TodoList";
 import CreateTodo from "./todo/CreateTodo";
 
 import appReducer from "./reducers";
+import ClearCompletedTodo from "./todo/ClearCompletedTodo.js";
 
 function App() {
   const initialTodos = [
@@ -15,6 +16,8 @@ function App() {
       description: "CSC 436 HW1",
       author: "Sanjaya",
       dateCreated: formatDate(new Date("Sep 27 2022 17:30:00")),
+      checked: false,
+      completed: "",
       id: uuidv4(),
     },
     {
@@ -22,6 +25,8 @@ function App() {
       description: "CSC 436 HW2",
       author: "Dilshan",
       dateCreated: formatDate(new Date("Oct 04 2022 17:30:00")),
+      checked: false,
+      completed: "",
       id: uuidv4(),
     },
   ];
@@ -49,10 +54,13 @@ function App() {
   return (
     <div>
       <UserBar user={state.user} dispatch={dispatch} />
-      <TodoList todos={state.todos} />
-      {state.user && (
-        <CreateTodo user={state.user} todos={state.todos} dispatch={dispatch} />
-      )}
+      <TodoList todos={state.todos} dispatch={dispatch} />
+      {state.user &&
+        <CreateTodo user={state.user} dispatch={dispatch} />
+      }
+      <div style={{ marginTop: 100 }}>
+        <ClearCompletedTodo dispatch={dispatch} />
+      </div>
     </div>
   );
 }
