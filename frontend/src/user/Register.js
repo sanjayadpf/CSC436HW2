@@ -1,24 +1,31 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { StateContext } from "../contexts";
+import { useResource } from "react-request-hook";
 
-export default function Register({ dispatch }) {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  //   function handleUsername(evt) {
-  //     setUsername(evt.target.value);
-  //   }
-  function handlePassword(evt) {
-    setPassword(evt.target.value);
-  }
-  function handlePasswordRepeat(evt) {
-    setPasswordRepeat(evt.target.value);
-  }
+
+  const {dispatch} = useContext(StateContext);
+
+  const [user, register] = useResource((username, password) => ({
+    url: "/users",
+    method: "post",
+    data: {email: username, password },
+    }));
+
+  useEffect(() => {
+    if (user && user.data) {
+    dispatch({ type: "REGISTER", username: user.data.user.email });
+    }
+  }, [user]);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        dispatch({ type: "REGISTER", username });
+        register(username, password);
       }}
     >
       <label htmlFor="register-username">Username:</label>
@@ -35,15 +42,15 @@ export default function Register({ dispatch }) {
         name="register-password"
         id="register-password"
         value={password}
-        onChange={handlePassword}
+        onChange={(event) =>setPassword(event.target.value)}
       />
-      <label htmlFor="register-password-repeat">Repeat password:</label>
+      <label htmlFor="register-password-repeat">Repeat Password:</label>
       <input
         type="password"
         name="register-password-repeat"
         id="register-password-repeat"
         value={passwordRepeat}
-        onChange={handlePasswordRepeat}
+        onChange={(event) =>setPasswordRepeat(event.target.value)}
       />
       <input
         type="submit"

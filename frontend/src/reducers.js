@@ -37,7 +37,8 @@ function todoReducer(state, action) {
       return newList;
     case "CLEAR_COMPLETED_TODO":
       return state.filter((item) => item.checked !== true);
-
+    case "FETCH_POSTS":
+      return action.todos;
     default:
       return state;
   }

@@ -1,0 +1,34 @@
+{
+  "todos": [
+    {
+      "title": "Todo #01",
+      "description": "CSC 436 HW1",
+      "author": "sanjaya@react.com",
+      "dateCreated": "2022-11-5 17:30:00",
+      "checked": false,
+      "completed": "",
+      "id": 3
+    },
+    {
+      "title": "Todo #02",
+      "description": "CSC 436 HW2",
+      "author": "Dilshan@react.com",
+      "dateCreated": "2022-11-5 17:30:00",
+      "checked": false,
+      "completed": "",
+      "id": 4
+    }
+  ],
+  "users": [
+    {
+      "email": "sanjaya@react.com",
+      "password": "$2a$10$HqYPSS4l1VUQHwhhc3N/qO9A2mBwo66EgfzwErqlSKJ1/uQ2nHBM6",
+      "id": 3
+    },
+    {
+      "email": "Dilshan@react.com",
+      "password": "$2a$10$qPjtxs6hO.XOQjo/LqEiJ.L3U.7gJM.6nIGAWLQAD7B6UDj4vuPQW",
+      "id": 4
+    }
+  ]
+}

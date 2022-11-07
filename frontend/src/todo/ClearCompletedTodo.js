@@ -1,4 +1,8 @@
-export default function ClearCompletedTodo({ dispatch }) {
+import { StateContext } from '../contexts';
+import { useContext } from "react";
+
+export default function ClearCompletedTodo() {
+    const { dispatch } = useContext(StateContext);
     return (
         <form
             onSubmit={(e) => {
