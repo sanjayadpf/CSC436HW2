@@ -1,24 +1,28 @@
 import { formatDate } from "./Format.js";
 import { useState, useContext, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+//import { v4 as uuidv4 } from "uuid";
 
 import { StateContext } from '../contexts'
 import { useResource } from "react-request-hook";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateTodo() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [uid] = useState(uuidv4());
+  //const [uid] = useState(uuidv4());
 
   const [error, setError] = useState(false);
 
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
 
-  const [todo, createTodo] = useResource(({ title, description, author, dateCreated, checked, completed }) => ({
+  const navigate = useNavigate();
+
+  const [todo, createTodo] = useResource(({ title, description, author, dateCreated, checked, completed, username }) => ({
     url: '/todos',
     method: 'post',
-    data: { title, description, author, dateCreated, checked, completed }
+    headers: { "Authorization": `${state.user.access_token}` },
+    data: { title, description, author, dateCreated, checked, completed, username }
   }))
 
   useEffect(() => {
@@ -31,11 +35,13 @@ export default function CreateTodo() {
         title: todo.data.title,
         description: todo.data.description,
         author: todo.data.author,
-        created: todo.data.dateCreated,
+        dateCreated: todo.data.dateCreated,
         checked: todo.data.checked,
-        finished: todo.data.completed,
-        id: todo.data.id,
+        completed: todo.data.completed,
+        id: todo.data._id,
+        username: todo.data.username
       });
+      navigate(`/`);
     }
   }, [todo]);
 
@@ -50,12 +56,13 @@ export default function CreateTodo() {
           author: user,
           dateCreated: formatDate(new Date(Date.now())),
           checked: false,
-          completed: ""
+          completed: "",
+          username: user.username
         });
       }}
     >
       <div>
-        Author: <b>{user}</b>
+        Author: <b>{user.username}</b>
       </div>
       <div>
         <label htmlFor="create-title">Title:</label>

@@ -11,6 +11,13 @@ import ClearCompletedTodo from "./todo/ClearCompletedTodo.js";
 import { useResource } from "react-request-hook";
 import { StateContext } from './contexts'
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
+import TodoPage from "./pages/TodoPage"; 
+import Layout from "./pages/Layout";
+
+
 function App() {
   /*  const initialTodos = [
      {
@@ -40,29 +47,34 @@ function App() {
     todos: [],
   });
 
-  const [todos, getTodos] = useResource(() => ({
+ /* const [todos, getTodos] = useResource(() => ({
     url: "/todos",
     method: "get",
-  }));
+  }));*/
 
-  useEffect(getTodos, []);
+  //useEffect(getTodos, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (todos && todos.data) {
       dispatch({ type: "FETCH_POSTS", todos: todos.data.reverse() });
     }
-  }, [todos]);
+  }, [todos]);*/
 
   return (
     <div>
-      <StateContext.Provider value={{ state, dispatch }}>
-        <UserBar />
-        <TodoList />
-        <div style={{ marginTop: 100 }}>
-          <ClearCompletedTodo />
-        </div>
-        {state.user && <CreateTodo />}
-      </StateContext.Provider>
+        <StateContext.Provider value={{state, dispatch}}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<HomePage />} />
+              </Route>
+              <Route path="/todo" element={<Layout />}>
+                <Route path="/todo/create" element={<CreateTodo />} />
+                <Route path="/todo/:id" element={<TodoPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </StateContext.Provider>
     </div>
   );
 }

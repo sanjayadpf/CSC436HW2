@@ -9,23 +9,37 @@ export default function Register() {
 
   const {dispatch} = useContext(StateContext);
 
+  const [status, setStatus] = useState("");
+
   const [user, register] = useResource((username, password) => ({
-    url: "/users",
+    url: "auth/register",
     method: "post",
-    data: {email: username, password },
+    data: { username, password, passwordConfirmation: password },
     }));
 
   useEffect(() => {
-    if (user && user.data) {
-    dispatch({ type: "REGISTER", username: user.data.user.email });
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if(user.error){
+        setStatus("Registration failed, please try again later.");
+      } else {
+        setStatus("Registration successful. You may now login");
+      }
     }
   }, [user]);
+
+  function handlePassword(evt) {
+    setPassword(evt.target.value);
+  }
+  function handlePasswordRepeat(evt) {
+    setPasswordRepeat(evt.target.value);
+  }
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         register(username, password);
+        //dispatch({ type: "REGISTER", username });
       }}
     >
       <label htmlFor="register-username">Username:</label>
@@ -42,15 +56,15 @@ export default function Register() {
         name="register-password"
         id="register-password"
         value={password}
-        onChange={(event) =>setPassword(event.target.value)}
+        onChange={handlePassword}
       />
-      <label htmlFor="register-password-repeat">Repeat Password:</label>
+      <label htmlFor="register-password-repeat">Repeat password:</label>
       <input
         type="password"
         name="register-password-repeat"
         id="register-password-repeat"
         value={passwordRepeat}
-        onChange={(event) =>setPasswordRepeat(event.target.value)}
+        onChange={handlePasswordRepeat}
       />
       <input
         type="submit"
@@ -61,6 +75,7 @@ export default function Register() {
           password !== passwordRepeat
         }
       />
+      <p>{status}</p>
     </form>
   );
 }

@@ -11,32 +11,34 @@ export default function TodoList() {
 
   const [todoDel, deleteTodo] = useResource(({ id }) => ({
     url: `/todos/${id}`,
-    method: 'delete'
+    method: 'delete',
+    headers: {"Authorization": `${state.user.access_token}`}
   }));
 
-  const [todoPatch, patchTodo] = useResource(({ id, checked, completed }) => ({
-    url: `/todos/${id}`,
-    method: 'patch',
-    data: { checked, completed }
-  }));
+  const [ todoPat, putTodo ] = useResource(({ id, title, description, author, dateCreated, checked, completed }) => ({
+    url: `/todo/${id}`,
+    method: 'put',
+    headers: {"Authorization": `${state.user.access_token}`},
+    data: {title, description, author, dateCreated, checked, completed},
+    }));
 
 
   return (
     <div>
       {todos.map((p, i) => (
-        <>
+        <div key={p._id}>
           <Todo {...p} />
           <input id="check" type="checkbox" checked={p.checked} onChange={() => {
-            patchTodo({ id: p.id, checked: !(p.checked), completed: ((p.completed === "")) ? formatDate(new Date(Date.now())) : "" });
+            putTodo({ id: p._id, title: p.title, description: p.description, author: p.author, dateCreated: p.dateCreated, checked: !(p.checked), completed: ((p.completed === "")) ? formatDate(new Date(Date.now())) : "" });
             dispatch({ type: "TOGGLE_TODO", id: p.id, checked: p.checked })
           }} />
           <br />
           <input type="submit" value="Delete" onClick={e => {
             e.preventDefault();
-            deleteTodo({ id: p.id });
+            deleteTodo({ id: p._id });
             dispatch({ type: "DELETE_TODO", id: p.id })
           }} />
-        </>
+        </div>
       ))}
     </div>
   );

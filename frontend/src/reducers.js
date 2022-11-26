@@ -3,7 +3,10 @@ function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN":
     case "REGISTER":
-      return action.username;
+      return {
+        username: action.username,
+        access_token: action.access_token,
+      };
     case "LOGOUT":
       return "";
     default:
@@ -21,14 +24,15 @@ function todoReducer(state, action) {
         dateCreated: action.dateCreated,
         checked: action.checked,
         completed: action.completed,
-        id: action.id
+        _id: action.id,
+        username: action.username
       }
       return [newTodo, ...state];
     case "DELETE_TODO":
-      return state.filter((item) => item.id !== action.id);
+      return state.filter((item) => item._id !== action.id);
     case "TOGGLE_TODO":
       const newList = state.map((item) => {
-        if (item.id === action.id) {
+        if (item._id === action.id) {
           const toggledItem = { ...item, checked: !item.checked, completed: ((item.completed === "")) ? formatDate(new Date(Date.now())) : "" };
           return toggledItem;
         }
@@ -39,6 +43,8 @@ function todoReducer(state, action) {
       return state.filter((item) => item.checked !== true);
     case "FETCH_POSTS":
       return action.todos;
+    case "CLEAR_TODOS":
+      return [];
     default:
       return state;
   }
